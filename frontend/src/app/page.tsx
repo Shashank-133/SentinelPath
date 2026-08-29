@@ -20,6 +20,8 @@ const RouteComparison = dynamic(() => import('@/components/RouteComparison'), { 
 const ReportIncident = dynamic(() => import('@/components/ReportIncident'), { ssr: false });
 const SOSPanel = dynamic(() => import('@/components/SOSPanel'), { ssr: false });
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
 export default function Home() {
   // Navigation coordinates
   const [startCoords, setStartCoords] = useState<[number, number] | null>(null);
@@ -77,7 +79,7 @@ export default function Home() {
 
   const fetchIncidents = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/incidents');
+      const res = await fetch(`${API_BASE}/api/incidents`);
       if (res.ok) {
         const data = await res.json();
         setIncidents(data);
@@ -89,7 +91,7 @@ export default function Home() {
 
   const fetchHeatmap = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/heatmap');
+      const res = await fetch(`${API_BASE}/api/heatmap`);
       if (res.ok) {
         const data = await res.json();
         setHeatmapCells(data);
@@ -104,7 +106,7 @@ export default function Home() {
     try {
       // Refresh centered around Delhi (Can be updated dynamically)
       const center = startCoords || [28.6139, 77.2090];
-      const res = await fetch(`http://127.0.0.1:8000/api/heatmap/refresh?center_lat=${center[0]}&center_lng=${center[1]}`, {
+      const res = await fetch(`${API_BASE}/api/heatmap/refresh?center_lat=${center[0]}&center_lng=${center[1]}`, {
         method: 'POST'
       });
       if (res.ok) {
@@ -125,7 +127,7 @@ export default function Home() {
     setRoutes([]);
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/routes?start_lat=${start[0]}&start_lng=${start[1]}&end_lat=${end[0]}&end_lng=${end[1]}`
+        `${API_BASE}/api/routes?start_lat=${start[0]}&start_lng=${start[1]}&end_lat=${end[0]}&end_lng=${end[1]}`
       );
       if (res.ok) {
         const data = await res.json();
